@@ -41,7 +41,7 @@ public:
 
     // функции обходов
     DynamicArray<int> preOrder() const; // прямой обход
-    DynamicArray<int> intOrder() const; // симметричный обход
+    DynamicArray<int> inOrder() const; // симметричный обход
     DynamicArray<int> postOrder() const; // обратный обход
 
     // обратно в скобочную запись
