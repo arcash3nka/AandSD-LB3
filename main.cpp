@@ -3,7 +3,7 @@
 #include <stdexcept>
 #include <string>
 
-#include "io/FileReader.h"
+#include "reader/FileReader.h"
 #include "structures/DynamicArray.h"
 #include "parser/BracketParser.h"
 #include "tree/AvlTree.h"

@@ -26,6 +26,7 @@ private:
     static std::string toBracket(const Node* node);
 
 public:
+    explicit BinaryTree(std::unique_ptr<Node> root);
     BinaryTree() = default; // пустое дерево
 
     // правило пяти из-за unique_ptr

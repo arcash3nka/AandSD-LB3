@@ -25,8 +25,8 @@ private:
     static int balanceOf(const Node* node); // высота левого / высота правого
     static void updateHeight(Node* node); // пересчет высоты по детям
 
-    static std::unique_ptr<Node> roteteLeft(std::unique_ptr<Node> node);
-    static std::unique_ptr<Node> roteteRight(std::unique_ptr<Node> node);
+    static std::unique_ptr<Node> rotateLeft(std::unique_ptr<Node> node);
+    static std::unique_ptr<Node> rotateRight(std::unique_ptr<Node> node);
     static std::unique_ptr<Node> rebalance(std::unique_ptr<Node> node);
 
     static std::unique_ptr<Node> insertNode(std::unique_ptr<Node> node, int value);
