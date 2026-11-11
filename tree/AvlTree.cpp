@@ -5,6 +5,7 @@
 #include "structures/Queue.h"
 #include "structures/Stack.h"
 
+// ВСПОМОГАТЕЛЬНЫЕ
 int AvlTree::heightOf(const Node* node) {
     return node == nullptr ? 0 : node->height;
 }
@@ -15,7 +16,7 @@ void AvlTree::updateHeight(Node* node) {
     node->height = 1 + std::max(heightOf(node->left.get()), heightOf(node->right.get()));
 }
 
-// левый поворот: правый сын становится корнем поддерва
+// ПОВОРОТЫ И БАЛАНСЫ
 std::unique_ptr<AvlTree::Node> AvlTree::rotateLeft(std::unique_ptr<Node> node) {
     std::unique_ptr<Node> newRoot = std::move(node->right);
 
@@ -68,7 +69,7 @@ std::unique_ptr<AvlTree::Node> AvlTree::rebalance(std::unique_ptr<Node> node) {
     return node; // баланс в норме
 }
 
-// вставка как в обычном дереве поиска, а на обратном ходе рекурсии - rebalance
+// ДЛЯ РЕКУРСИИ
 std::unique_ptr<AvlTree::Node> AvlTree::insertNode(std::unique_ptr<Node> node, int value) {
     if (node == nullptr) {
         return std::make_unique<Node>(value); // нашли свободное место
@@ -85,7 +86,6 @@ std::unique_ptr<AvlTree::Node> AvlTree::insertNode(std::unique_ptr<Node> node, i
 
 std::unique_ptr<AvlTree::Node> AvlTree::removeMin(std::unique_ptr<Node> node, int& minValue) {
     if (node->left == nullptr) {
-        // дошли до минимума: запоминаем значение, на его место встаёт правый сын
         minValue = node->value;
         return std::move(node->right);
     }
@@ -100,16 +100,13 @@ std::unique_ptr<AvlTree::Node> AvlTree::eraseNode(std::unique_ptr<Node> node, in
     } else if (value > node->value) {
         node->right = eraseNode(std::move(node->right), value);
     } else {
-        // нашли узел. 3 случая:
         if (node->left == nullptr) {
-            return std::move(node->right); // нет левого (или нет детей вообще): заменяем правым
+            return std::move(node->right);
         }
         if (node->right == nullptr) {
-            return std::move(node->left); // нет правого: заменяем левым
+            return std::move(node->left);
         }
 
-        // два ребёнка: на место узла ставим минимум правого поддерева
-        // (следующее по величине значение), а сам этот минимум удаляем
         int minValue = 0;
         node->right = removeMin(std::move(node->right), minValue);
         node->value = minValue;
@@ -160,7 +157,7 @@ std::string AvlTree::toBracket(const Node* node) {
     return text + ")";
 }
 
-// ================= Конструктор и перемещение =================
+// ПРАВИЛО ПЯТИ
 AvlTree::AvlTree() : root_(nullptr), size_(0) {}
 
 AvlTree::AvlTree(AvlTree&& other) noexcept
@@ -177,7 +174,7 @@ AvlTree& AvlTree::operator=(AvlTree&& other) noexcept {
     return *this;
 }
 
-// ================= Вставка, удаление, поиск =================
+// ИЗМЕНЕНИЯ
 bool AvlTree::insert(int value) {
     if (contains(value)) {
         return false; // повторы не храним
@@ -200,6 +197,7 @@ bool AvlTree::erase(int value) {
     return true;
 }
 
+// ГЕТТЕРЫ
 // поиск без рекурсии: на каждом шаге отбрасываем половину дерева
 bool AvlTree::contains(int value) const {
     const Node* current = root_.get();
@@ -235,9 +233,7 @@ bool AvlTree::isBalanced() const {
     return checkBalance(root_.get()) != -1;
 }
 
-// ================= Обходы (итеративные) =================
-// в ширину: очередь. Берём узел из начала, значение в результат,
-// детей - в конец очереди. Так сначала выходят все узлы уровня, потом следующего
+// ФУНКЦИИ ОБХОДА
 DynamicArray<int> AvlTree::breadthFirst() const {
     DynamicArray<int> result;
     if (root_ == nullptr) {
@@ -263,7 +259,6 @@ DynamicArray<int> AvlTree::breadthFirst() const {
     return result;
 }
 
-// корень -> левое -> правое. Стек вместо рекурсии
 DynamicArray<int> AvlTree::preOrder() const {
     DynamicArray<int> result;
     if (root_ == nullptr) {
@@ -291,8 +286,6 @@ DynamicArray<int> AvlTree::preOrder() const {
     return result;
 }
 
-// левое -> корень -> правое
-// current - "где мы сейчас", стек хранит путь вниз, к которому нужно вернуться
 DynamicArray<int> AvlTree::inOrder() const {
     DynamicArray<int> result;
     Stack<const Node*> stack;
@@ -316,10 +309,6 @@ DynamicArray<int> AvlTree::inOrder() const {
     return result;
 }
 
-// левое -> правое -> корень
-// узел можно записать только после обоих детей, поэтому у узла на вершине стека смотрим:
-// правое поддерево уже обработано (lastVisited) или его нет - записываем узел,
-// иначе сначала идём в правое
 DynamicArray<int> AvlTree::postOrder() const {
     DynamicArray<int> result;
     Stack<const Node*> stack;

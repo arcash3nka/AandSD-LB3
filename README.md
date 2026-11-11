@@ -11,7 +11,7 @@
 Из корня проекта (файлы читаются из папки `data/` относительно корня):
 
 ```bash
-clang++ -std=c++17 -Wall -Wextra -I. $(find . -name "*.cpp") -o lb3 && ./build/trees
+clang++ -std=c++17 -Wall -Wextra -I. $(find . -name "*.cpp") -o ./build/lb3 && ./build/lb3
 ```
 
 Программа показывает меню: цифра 0–5 + Enter запускает сценарий, 0 — выход.

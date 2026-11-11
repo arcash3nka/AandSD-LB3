@@ -4,7 +4,7 @@
 
 BinaryTree::BinaryTree(std::unique_ptr<Node> root) : root_(std::move(root)) {}
 
-// работа с узлом, но не со всем деревом
+// ДЛЯ РЕКУРСИИ
 int BinaryTree::countNodes(const Node* node) {
     if (node == nullptr) {
         return 0;
@@ -26,7 +26,7 @@ void BinaryTree::collectPreOrder(const Node* node, DynamicArray<int>& result) {
         return;
     }
 
-    result.pushBack(node->value); // сначала сам узел
+    result.pushBack(node->value);
     collectPreOrder(node->left.get(), result);
     collectPreOrder(node->right.get(), result);
 }
@@ -37,11 +37,10 @@ void BinaryTree::collectInOrder(const Node* node, DynamicArray<int>& result) {
     }
 
     collectInOrder(node->left.get(), result);
-    result.pushBack(node->value); // узел между поддеревьями
+    result.pushBack(node->value);
     collectInOrder(node->right.get(), result);
 }
 
-// левое -> правое -> корень
 void BinaryTree::collectPostOrder(const Node* node, DynamicArray<int>& result) {
     if (node == nullptr) {
         return;
@@ -49,7 +48,7 @@ void BinaryTree::collectPostOrder(const Node* node, DynamicArray<int>& result) {
 
     collectPostOrder(node->left.get(), result);
     collectPostOrder(node->right.get(), result);
-    result.pushBack(node->value); // узел после обоих поддеревьев
+    result.pushBack(node->value);
 }
 
 std::string BinaryTree::toBracket(const Node* node) {
@@ -71,11 +70,12 @@ std::string BinaryTree::toBracket(const Node* node) {
     return text + ")";
 }
 
-// публичные методы
+// ГЕТТЕРЫ
 bool BinaryTree::empty() const {return root_ == nullptr;}
 int BinaryTree::size() const {return countNodes(root_.get());}
 int BinaryTree::height() const {return calcHeight(root_.get());}
 
+// ФУНКЦИИ ОБХОДА
 DynamicArray<int> BinaryTree::preOrder() const {
     DynamicArray<int> result;
     collectPreOrder(root_.get(), result);
